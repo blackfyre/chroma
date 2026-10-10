@@ -1,0 +1,117 @@
+<lexer>
+  <config>
+    <name>DBML</name>
+    <alias>dbml</alias>
+    <filename>*.dbml</filename>
+    <mime_type>text/x-dbml</mime_type>
+    <case_insensitive>true</case_insensitive>
+    <dot_all>true</dot_all>
+  </config>
+  <rules>
+    <state name="common">
+      <rule pattern="\s+">
+        <token type="TextWhitespace"/>
+      </rule>
+      <rule pattern="//[^\n]*">
+        <token type="CommentSingle"/>
+      </rule>
+      <rule pattern="/\*.*?\*/">
+        <token type="CommentMultiline"/>
+      </rule>
+      <rule pattern="'''.*?'''">
+        <token type="LiteralStringDoc"/>
+      </rule>
+      <rule pattern="'(\\\\|\\'|[^'])*'">
+        <token type="LiteralStringSingle"/>
+      </rule>
+      <rule pattern="`[^`]*`">
+        <token type="LiteralStringBacktick"/>
+      </rule>
+      <rule pattern="&quot;(\\\\|\\&quot;|[^&quot;])*&quot;">
+        <token type="NameVariable"/>
+      </rule>
+      <rule pattern="#[0-9a-f]{3,6}\b">
+        <token type="LiteralNumberHex"/>
+      </rule>
+      <rule pattern="-?\d+(\.\d+)?">
+        <token type="LiteralNumber"/>
+      </rule>
+      <rule pattern="&lt;&gt;|[&lt;&gt;-]">
+        <token type="Operator"/>
+      </rule>
+    </state>
+    <state name="root">
+      <rule>
+        <include state="common"/>
+      </rule>
+      <rule pattern="(table|tablegroup|tablepartial|enum|project)(\s+)([\w.]+)">
+        <bygroups>
+          <token type="Keyword"/>
+          <token type="TextWhitespace"/>
+          <token type="NameClass"/>
+        </bygroups>
+      </rule>
+      <rule pattern="\b(table|tablegroup|tablepartial|enum|project|ref|note|indexes|as)\b">
+        <token type="Keyword"/>
+      </rule>
+      <rule pattern="\{">
+        <token type="Punctuation"/>
+        <push state="body"/>
+      </rule>
+      <rule pattern="\[">
+        <token type="Punctuation"/>
+        <push state="settings"/>
+      </rule>
+      <rule pattern="[}():,.]">
+        <token type="Punctuation"/>
+      </rule>
+      <rule pattern="\w+">
+        <token type="Name"/>
+      </rule>
+    </state>
+    <state name="body">
+      <rule pattern="\n">
+        <token type="TextWhitespace"/>
+      </rule>
+      <rule pattern="\}">
+        <token type="Punctuation"/>
+        <pop depth="1"/>
+      </rule>
+      <rule pattern="(?m)^([ \t]*)(indexes|note)\b">
+        <bygroups>
+          <token type="TextWhitespace"/>
+          <token type="Keyword"/>
+        </bygroups>
+      </rule>
+      <rule pattern="(?m)^([ \t]*)(\w+|&quot;[^&quot;]*&quot;)([ \t]+)(\w+(?:\([^)]*\))?(?:\[\])?)">
+        <bygroups>
+          <token type="TextWhitespace"/>
+          <token type="NameVariable"/>
+          <token type="TextWhitespace"/>
+          <token type="KeywordType"/>
+        </bygroups>
+      </rule>
+      <rule>
+        <include state="root"/>
+      </rule>
+    </state>
+    <state name="settings">
+      <rule pattern="\]">
+        <token type="Punctuation"/>
+        <pop depth="1"/>
+      </rule>
+      <rule>
+        <include state="common"/>
+      </rule>
+      <rule pattern="\b(pk|primary key|increment|unique|not null|null|default|ref|note|name|type|delete|update|cascade|restrict|set null|set default|no action|headercolor)\b">
+        <token type="NameAttribute"/>
+      </rule>
+      <rule pattern="[:,.()]">
+        <token type="Punctuation"/>
+      </rule>
+      <rule pattern="\w+">
+        <token type="Name"/>
+      </rule>
+    </state>
+  </rules>
+</lexer>

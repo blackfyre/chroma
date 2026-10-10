@@ -1,0 +1,40 @@
+// Shop schema
+Project shop {
+  database_type: 'PostgreSQL'
+  Note: '''
+    Orders and the people who place them.
+  '''
+}
+
+Table users as U {
+  id integer [pk, increment]
+  email varchar(255) [unique, not null]
+  "full name" varchar
+  created_at timestamp [default: `now()`]
+  tags text[]
+
+  indexes {
+    (email, created_at) [name: 'users_email_created']
+  }
+}
+
+Table orders [headercolor: #3498DB] {
+  id integer [pk, increment]
+  user_id integer [not null, ref: > U.id]
+  status order_status [note: 'pending, paid or shipped']
+  total decimal(10,2) [default: 0]
+}
+
+Enum order_status {
+  pending
+  paid
+  shipped [note: 'on its way']
+}
+
+Ref: orders.user_id > users.id [delete: cascade]
+
+/* Grouping */
+TableGroup commerce {
+  users
+  orders
+}

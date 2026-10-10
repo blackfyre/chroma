@@ -440,6 +440,10 @@ var embeddedLexers = []struct {
 			"*.bicep",
 		},
 	}},
+	{"embedded/blade.xml", chroma.Config{
+		Name:   "Blade",
+		DotAll: true,
+	}},
 	{"embedded/blitzbasic.xml", chroma.Config{
 		Name: "BlitzBasic",
 		Aliases: []string{
@@ -905,6 +909,20 @@ var embeddedLexers = []struct {
 			"*.dax",
 		},
 	}},
+	{"embedded/dbml.xml", chroma.Config{
+		Name: "DBML",
+		Aliases: []string{
+			"dbml",
+		},
+		Filenames: []string{
+			"*.dbml",
+		},
+		MimeTypes: []string{
+			"text/x-dbml",
+		},
+		CaseInsensitive: true,
+		DotAll:          true,
+	}},
 	{"embedded/desktop_entry.xml", chroma.Config{
 		Name: "Desktop file",
 		Aliases: []string{
@@ -1218,6 +1236,23 @@ var embeddedLexers = []struct {
 				},
 			},
 		},
+	}},
+	{"embedded/g-code.xml", chroma.Config{
+		Name: "G-code",
+		Aliases: []string{
+			"gcode",
+			"g-code",
+			"nc",
+		},
+		Filenames: []string{
+			"*.gcode",
+			"*.gco",
+			"*.ngc",
+		},
+		MimeTypes: []string{
+			"text/x-gcode",
+		},
+		CaseInsensitive: true,
 	}},
 	{"embedded/garden.xml", chroma.Config{
 		Name: "Garden",
